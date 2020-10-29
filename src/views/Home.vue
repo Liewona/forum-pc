@@ -32,6 +32,7 @@ export default {
       console.log(this.$refs);
       this.$refs.test.getVal();
       this.editorContent = this.$refs.test.editor.txt.html();
+      console.log("aa");
     }
   }
 };
