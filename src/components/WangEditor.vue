@@ -1,29 +1,34 @@
 <template>
-  <div :id="id" style="width:800px; height: 400px">
-     <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+  <div>
+
+    <div :id="id" class="main-editor">
+      <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+    </div>
+    <br>
+    <el-button type="primary">发表</el-button>
   </div>
 </template>
 
 <script>
-import E from 'wangeditor';
+import E from "wangeditor";
 
 export default {
-  name: 'wangeditor',
+  name: "wangeditor",
   props: {
     id: String
   },
   mounted() {
-    if(this.id == undefined) {
-      this.id = '123';
+    if (this.id == undefined) {
+      this.id = "123";
     }
     this.editor = new E(`#${this.id}`);
-    this.editor.config.uploadImgServer = '/upload-img'
+    this.editor.config.uploadImgServer = "/upload-img";
     this.editor.create();
   },
   data() {
     return {
-      editor: Object,
-    }
+      editor: Object
+    };
   },
   methods: {
     getVal() {
@@ -31,7 +36,7 @@ export default {
       console.log(this.editor.txt.html());
     }
   }
-}
+};
 </script>
 
 <style>
