@@ -5,7 +5,7 @@
       <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
     </div>
     <br>
-    <el-button type="primary">发表</el-button>
+    <el-button @click="submit" type="primary">发表</el-button>
   </div>
 </template>
 
@@ -34,6 +34,10 @@ export default {
     getVal() {
       console.log(this.editor.txt.text());
       console.log(this.editor.txt.html());
+    },
+    submit() {
+      var html = this.editor.txt.html();
+      this.$emit("pressVal", html);
     }
   }
 };

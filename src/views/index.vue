@@ -44,7 +44,7 @@
     <el-container>
 
       <wang-editor class="editor"
-        :id="'editor'"
+        :id="'editor'" @pressVal="pressVal"
         ref="editor"></wang-editor>
     </el-container>
   </el-container>
@@ -63,7 +63,7 @@ export default {
   },
   beforeCreate() {
     this.$axios
-      .get("http://localhost:8848/discuss")
+      .get("api/discuss")
       .then(res => {
         if (res.data.code == "0000") {
           this.data = res.data.data;
@@ -104,6 +104,9 @@ export default {
     handleClick() {
 
     },
+    pressVal(html) {
+      console.log(html)
+    }
   }
 };
 </script>
