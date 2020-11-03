@@ -5,6 +5,7 @@
       <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
     </div>
     <br>
+    <span>{{now}}/1000</span>
     <el-button @click="submit" type="primary">发表</el-button>
   </div>
 </template>
@@ -22,12 +23,15 @@ export default {
       this.id = "123";
     }
     this.editor = new E(`#${this.id}`);
-    this.editor.config.uploadImgServer = "/upload-img";
+    this.editor.config.uploadFileName = "upfile";
+    // this.editor.customConfig.uploadFileName = "upfile";
+    this.editor.config.uploadImgServer = "api/up/dis";
     this.editor.create();
   },
   data() {
     return {
-      editor: Object
+      editor: Object,
+      now: 0,
     };
   },
   methods: {
@@ -39,7 +43,16 @@ export default {
       var html = this.editor.txt.html();
       this.$emit("pressVal", html);
     }
+  },
+  watch: {
+    editor: {
+      deep: true,
+      handler: function(newVal, oldVal) {{
+        this.now = newVal.txt.html().length;
+      }}
+    },
   }
+  
 };
 </script>
 

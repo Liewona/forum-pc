@@ -40,6 +40,14 @@
         </div>
       </div>
 
+      <div>
+        <form action="api/up/dis" method="post" enctype="multipart/form-data">
+        SpringMVC文件上传 <br>
+        选择文件：<input type="file" name="upfile" id="" /> <br>
+        <input type="submit" value="上传">
+    </form>
+      </div>
+
     </el-container>
     <el-container>
 
