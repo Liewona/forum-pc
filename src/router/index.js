@@ -2,8 +2,9 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 // import Home from "../views/Home.vue";
 import Index from "@/views/Index.vue";
+import Mine from "@/views/Mine/Mine.vue";
 import MineIndex from "@/views/Mine/MineIndex.vue";
-
+import MineInfo from "@/views/Mine/MineInfo.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -22,9 +23,22 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
   {
-    path:"/mineIndex",
-    name:"MineIndex",
-    component: MineIndex
+    path:"/mine",
+    name:"Mine",
+    component: Mine,
+    redirect:'/mineIndex',
+    children:[
+      {
+        path:"/mineIndex",
+        name:"MineIndex",
+        component:MineIndex
+      },
+      {
+        path:"/mineInfo",
+        name:"MineInfo",
+        component:MineInfo
+      }
+    ]
   }
 ];
 

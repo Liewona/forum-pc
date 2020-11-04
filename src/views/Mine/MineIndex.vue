@@ -1,68 +1,40 @@
 <template>
-  <div>
-    <el-container class="mineIndex" id="mineIndex">
-      <el-header
-        ><div class="search">
-          <el-input
-            placeholder="请输入搜索内容"
-            clearable
-            v-model="word"
-            class="handle-input"
-          >
-            <el-button
-              type="primary"
-              class="searchBtn"
-              @click="search"
-              slot="append"
-              icon="el-icon-search"
-              >搜索帖子</el-button
-            >
-          </el-input>
-        </div></el-header
-      >
-      <el-main id="mineIndex">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span
-              ><el-avatar
-                shape="square"
-                :size="100"
-                :src="squareUrl"
-              ></el-avatar
-            ></span>
-            <div class="userinfo_middle">
-              <div class="userinfo_title">
-                <span class="userinfo_username ">that_is_why</span>
-              </div>
-              <div class="userinfo_userdata">
-                <span class="user_name"
-                  >用户名:that_is_why<!--<span--><span
-                    class="userinfo_split"
-                  ></span>
-                  <span>吧龄:6.3年</span><span class="userinfo_split"></span
-                  ><span>发贴:17</span>
-                </span>
-              </div>
-              <el-tag>修改信息</el-tag>
-            </div>
-          </div>
-          <div class="body">
-            <div v-for="item in data" :key="item.id">
-              <main-body-one class="itemBox" :data="item"></main-body-one>
-            </div>
-          </div>
-        </el-card>
-      </el-main>
-    </el-container>
-  </div>
+<el-container class="mineIndex" id="mineIndex" direction="vertical">
+  <el-card class="box-card" style="margin-bottom:15px">
+    <div  class="clearfix">
+      <span
+        ><el-avatar shape="square" :size="100" :src="squareUrl"></el-avatar
+      ></span>
+      <div class="userinfo_middle">
+        <div class="userinfo_title">
+          <span class="userinfo_username ">that_is_why</span>
+        </div>
+        <div class="userinfo_userdata">
+          <span class="user_name"
+            >用户名:that_is_why<!--<span--><span class="userinfo_split"></span>
+            <span>吧龄:6.3年</span><span class="userinfo_split"></span
+            ><span>发贴:17</span>
+          </span>
+        </div>
+        <el-tag @click.native="toInfo()">修改信息</el-tag>
+      </div>
+    </div>
+  </el-card>
+    <div class="body">
+      <div v-for="item in data" :key="item.id">
+        <main-body-one class="itemBox" :data="item"></main-body-one>
+      </div>
+    </div>
+</el-container>
 </template>
 
 <script>
 import MainBodyOne from "@/components/index/MainBodyOne.vue";
 export default {
-  components:{
+  components: {
     MainBodyOne
   },
+  
   beforeCreate() {
     this.$axios
       .get("api/discuss")
@@ -80,40 +52,40 @@ export default {
   },
   data() {
     return {
+      data:[],
       squareUrl:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604466294333&di=b4981770df21a26896005769cda194c0&imgtype=0&src=http%3A%2F%2Foss.5eplay.com%2Feditor%2F20200301%2F1c8c26566f712493c52307f5217efb22.jpeg"
     };
-  }
+  },
+  created(){
+    this.beforeCreate();
+  },
+  methods:{
+    toInfo(){
+      this.$router.push('/mineInfo');
+    }
+  },
 };
 </script>
 
 <style>
 #mineIndex {
-  /* width: 1000px; */
+  width: 1000px;
   margin: 0 auto;
   flex: none;
   padding: 0;
 }
-.search {
-  text-align: center;
-}
-#mineIndex .searchBtn {
-  background-color: #409eff;
-  border-color: #409eff;
-  color: #fff;
-  border-radius: 0;
-  padding-right: 30px;
-}
 .box-card {
   padding: 0 20px;
   width: 1000px;
+  box-sizing: border-box;
 }
 .el-card__header {
   padding: 10px 0;
 }
 .userinfo_middle {
   float: right;
-  padding-right: 640px;
+  padding-right: 555px;
 }
 .userinfo_title {
   /* float: right; */
