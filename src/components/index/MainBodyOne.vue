@@ -91,8 +91,8 @@ export default {
       var id = this.data.id;
       console.log(id);
       this.$router.push({
-        name: "discuss", // discuss/id
-        parma: {id: id}
+        name: "ForumDetail", // discuss/id
+        params: {id: id}
       });
 
     },

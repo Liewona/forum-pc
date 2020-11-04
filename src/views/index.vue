@@ -27,10 +27,9 @@
 
       <div class="c-type">
         <el-radio-group v-model="tabType"
-          style="margin: 20px 0 15px 0;"
-          @click="handleClick">
-          <el-radio-button @click="handleClick"
-            label="sug">推荐</el-radio-button>
+          @change="getData"
+          style="margin: 20px 0 15px 0;">
+          <el-radio-button label="sug">推荐</el-radio-button>
           <el-radio-button label="hot">最热</el-radio-button>
           <el-radio-button label="last">最新</el-radio-button>
         </el-radio-group>
@@ -47,21 +46,23 @@
       <el-pagination background
         @current-change="pageChange"
         layout="prev, pager, next"
-        :page-size="100"
+        :page-size="pageSize"
         :hide-on-single-page="true"
-        :total="100">
+        :total="total">
       </el-pagination>
 
     </el-container>
-    <el-container class="editor"  direction="vertical">
+    <el-container class="editor"
+      direction="vertical"
+      v-if="id > 0">
 
-      <el-input placeholder="请输入标题" style="margin-bottom: 10px;"
+      <el-input placeholder="请输入标题"
+        style="margin-bottom: 10px;"
         v-model="title"
         clearable>
       </el-input>
 
-      <wang-editor
-        @pressVal="pressVal"
+      <wang-editor @pressVal="pressVal"
         ref="editor"></wang-editor>
     </el-container>
   </el-container>
@@ -76,10 +77,10 @@ export default {
   name: "index",
   components: {
     WangEditor,
-    MainBodyOne,
+    MainBodyOne
   },
   props: {
-    id: Number,
+    // id: 1,
   },
   created() {
     this.getData();
@@ -92,6 +93,10 @@ export default {
       tabType: "sug",
       api: "api/discuss",
       title: "",
+      total: 100,
+      pageSize: 25,
+      page: 1,
+      id: 1
     };
   },
   methods: {
@@ -100,10 +105,10 @@ export default {
       this.$refs.editor.getVal();
       this.editorContent = this.$refs.editor.editor.txt.html();
     },
-    search() {},
+    search() {
+      this.getData();
+    },
     toWrite() {
-      console.log(this.$("#editor"));
-      console.log(this.$("#editor").offset());
       this.$("html, body").animate(
         {
           scrollTop: this.$("#editor").offset().top
@@ -120,37 +125,53 @@ export default {
       alert(this.tabType);
     },
     pressVal(html) {
-      if(this.title == "") {
+      if (this.title == "") {
         this.$message.error("请输入标题！");
         return false;
       }
       console.log(html);
-      this.$axios.post("api/discuss", {
-        // id:uid,
-        id: 1,
-        title: this.title,
-        content: html,        
-      })
-      .then(res => {
-        if(res.data.code == "0000") {
-          this.$message.success("发表帖子成功");
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    },
-    pageChange() {},
-    getData() {
       this.$axios
-        .get(this.api)
+        .post("api/discuss", {
+          // id:uid,
+          id: 1,
+          title: this.title,
+          content: html
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code == "0000") {
+            this.$message.success("发表帖子成功");
+            this.$refs.editor.editor.txt.clear();
+            this.title = "";
+            this.getData();
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    pageChange(index) {
+      this.page = index;
+    },
+    getData() {
+      var data = {
+        type: this.tabType,
+        word: this.word,
+        limit: this.pageSize,
+        page: this.page
+      };
+      this.$axios
+        .get(this.api, {
+          params: data
+        })
         .then(res => {
           if (res.data.code == "0000") {
             this.data = res.data.data;
           } else {
             this.$message.error(res.data.msg);
           }
-          console.log(res);
         })
         .catch(err => {
           console.log(err);
@@ -198,11 +219,22 @@ div.handle-input {
   border-radius: 0;
   padding-right: 30px;
 }
+#main .searchBtn:hover {  
+  background-color:  rgb(34, 134, 235);
+  border-color: rgb(34, 134, 235);
+  transition: 0.5s;
+}
 #main .writeBtn {
   background-color: #67c23a;
   border-color: #67c23a;
   color: #fff;
   border-radius: 0 4px 4px 0;
+}
+#main .writeBtn:hover {
+  
+  background-color: #4faf20;
+  border-color: #4faf20;;
+  transition: 0.5s;
 }
 .type-item {
   display: inline-block;
@@ -214,4 +246,6 @@ div.handle-input {
   background-color: #309efc;
   color: #fff;
 }
+
+
 </style>
