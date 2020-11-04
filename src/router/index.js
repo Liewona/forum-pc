@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import Index from "@/views/Index.vue"
 import ForumDetail from "@/views/ForumDetail.vue"
 // import Home from "../views/Home.vue";
-import Index from "@/views/Index.vue";
 import Mine from "@/views/Mine/Mine.vue";
 import MineIndex from "@/views/Mine/MineIndex.vue";
 import MineInfo from "@/views/Mine/MineInfo.vue";
@@ -24,9 +23,6 @@ const routes = [
     component: ForumDetail,
     // component: () =>
     //   import(/* webpackChunkName: "about" */ "../views/About.vue")
-    
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
   {
     path:"/mine",
