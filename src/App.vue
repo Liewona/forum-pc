@@ -15,6 +15,16 @@ export default {
   components: {
     ForumTitle
   },
+  
+  watch: {
+    // 旧版本使用 '$route'(tom from)进行监听
+    $route(to, from) {
+      //
+      console.log(to);
+      console.log(from);
+      this.data = to.params.id;
+    }
+  }
 }
 </script>
 

@@ -1,11 +1,15 @@
 <template>
-  
+  <div>
+  </div>
 </template>
 
 <script>
 export default {
-
-}
+  created() {
+    console.log(this.$route.params);
+    alert("1");
+  }
+};
 </script>
 
 <style>
@@ -51,7 +55,8 @@ pre code {
 }
 
 /* ul ol 样式 */
-ul, ol {
+ul,
+ol {
   margin: 10px 0 10px 20px;
 }
 </style>
