@@ -1,7 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 // import Home from "../views/Home.vue";
-import Index from "@/views/Index.vue"
+import Index from "@/views/Index.vue";
+import MineIndex from "@/views/Mine/MineIndex.vue";
 
 Vue.use(VueRouter);
 
@@ -19,6 +20,11 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path:"/mineIndex",
+    name:"MineIndex",
+    component: MineIndex
   }
 ];
 
