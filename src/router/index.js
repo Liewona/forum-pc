@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import Index from "@/views/Index.vue"
+import ForumDetail from "@/views/ForumDetail.vue"
 // import Home from "../views/Home.vue";
 import Index from "@/views/Index.vue";
 import Mine from "@/views/Mine/Mine.vue";
@@ -14,11 +16,15 @@ const routes = [
     component: Index
   },
   {
-    path: "/about",
-    name: "About",
+    path: "/discuss/:id",
+    name: "ForumDetail",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
+    component: ForumDetail,
+    // component: () =>
+    //   import(/* webpackChunkName: "about" */ "../views/About.vue")
+    
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
   },

@@ -1,18 +1,25 @@
 <template>
   <div>
     <div class="title">
-      <a href="#"
-        onclick="return false"
+      <span class="title-text"
         @click="titleClick"
-        v-text="data.title"></a>
+        v-text="data.title"></span>
     </div>
     <div class="contextBody"
       v-html="content">
     </div>
-    <div class="imgBox" id="imgBox" v-if="imgSrcs.length >= 1">
-      <img v-show="imgSrcs[0]" :src="imgSrcs[0]" alt="">
-      <img v-show="imgSrcs[1]" :src="imgSrcs[1]" alt="">
-      <img v-show="imgSrcs[2]" :src="imgSrcs[2]" alt="">
+    <div class="imgBox"
+      id="imgBox"
+      v-if="imgSrcs.length >= 1">
+      <img v-show="imgSrcs[0]"
+        :src="imgSrcs[0]"
+        alt="">
+      <img v-show="imgSrcs[1]"
+        :src="imgSrcs[1]"
+        alt="">
+      <img v-show="imgSrcs[2]"
+        :src="imgSrcs[2]"
+        alt="">
       <!-- <img src="@/assets/img/3.jpg" alt="" />
       <img src="@/assets/img/03.jpg" alt="" />
       <img src="@/assets/img/003.jpg" alt="" /> -->
@@ -58,31 +65,36 @@ export default {
     this.content = this.data.content.replace(/<[^>]*>|<\/[^>]*>/gm, "");
     var reg = /<img[^>]+src="[^"]+"[^>]*>/g;
     var result = this.data.content.match(reg); //获得所有的img标签
-    console.log(this.imgSrcs)
-    for (var i = 0; i < result.length; i++) {
-      
-      // var reg2 = /src="([^"]+)"/g;
-      // var result2 = reg2.exec(result); //匹配src
-      // alert(RegExp.$1);
-      // console.log(result2)
-      // console.log(reg2.exec(result[i]))
+    console.log(this.imgSrcs);
+    if (result) {
+      for (var i = 0; i < result.length; i++) {
+        // var reg2 = /src="([^"]+)"/g;
+        // var result2 = reg2.exec(result); //匹配src
+        // alert(RegExp.$1);
+        // console.log(result2)
+        // console.log(reg2.exec(result[i]))
 
-      var reg2 = new RegExp(/src="([^"]*)"/g);
-      var arr = reg2.exec(result[i]);
-      this.imgSrcs.push(arr[1]);
+        var reg2 = new RegExp(/src="([^"]*)"/g);
+        var arr = reg2.exec(result[i]);
+        this.imgSrcs.push(arr[1]);
+      }
     }
   },
   data() {
     return {
       content: String,
-      imgSrcs: [],
-      
+      imgSrcs: []
     };
   },
   methods: {
     titleClick() {
-      alert("123");
-      return false;
+      var id = this.data.id;
+      console.log(id);
+      this.$router.push({
+        name: "discuss",
+        params: {id: id}
+      });
+
     },
     personClick() {
       return false;
@@ -96,14 +108,12 @@ export default {
   font-size: 24px;
   margin-bottom: 10px;
 }
-a {
-  text-decoration: none;
-}
-.title a {
+.title .title-text {
   color: #005097;
+  cursor: pointer;
   font-family: STHeiti, "Microsoft Yahei", "Microsoft YaHei", Arial, sans-serif;
 }
-a:hover {
+.title-text:hover {
   text-decoration: underline;
 }
 .contextBody {
@@ -115,7 +125,7 @@ a:hover {
   padding: 0 10px;
   font-size: 14px;
 }
-.authorMsg a {
+.authorMsg .title-text {
   color: #333;
 }
 .authorMsg i {

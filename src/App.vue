@@ -1,15 +1,29 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link>
-      <router-link to="/about">About</router-link>
+    <div id="nav">      
+      <forum-title></forum-title>
       <router-link to="/mineIndex">mineIndex</router-link>
     </div>
     <router-view />
   </div>
 </template>
 
+
+<script>
+
+import ForumTitle from "@/components/index/ForumTitle.vue";
+export default {  
+  components: {
+    ForumTitle
+  },
+}
+</script>
+
 <style>
+* {
+  margin: 0;
+  padding: 0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -19,17 +33,12 @@
 }
 
 #nav {
-  padding: 30px;
-}
-
-#nav a {
+  margin-bottom: 30px;
+  padding: 0;
   font-weight: bold;
-  color: #2c3e50;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+
 .body {  
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
