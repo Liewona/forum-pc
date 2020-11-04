@@ -3,8 +3,9 @@ import VueRouter from "vue-router";
 import Index from "@/views/Index.vue"
 import ForumDetail from "@/views/ForumDetail.vue"
 // import Home from "../views/Home.vue";
+import Mine from "@/views/Mine/Mine.vue";
 import MineIndex from "@/views/Mine/MineIndex.vue";
-
+import MineInfo from "@/views/Mine/MineInfo.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -21,12 +22,25 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: ForumDetail,
     // component: () =>
-    //   import(/* webpackChunkName: "about" */ "../views/About.vue)
+    //   import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
   {
-    path:"/mineIndex",
-    name:"MineIndex",
-    component: MineIndex
+    path:"/mine",
+    name:"Mine",
+    component: Mine,
+    redirect:'/mineIndex',
+    children:[
+      {
+        path:"/mineIndex",
+        name:"MineIndex",
+        component:MineIndex
+      },
+      {
+        path:"/mineInfo",
+        name:"MineInfo",
+        component:MineInfo
+      }
+    ]
   }
 ];
 
