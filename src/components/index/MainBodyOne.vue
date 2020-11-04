@@ -65,7 +65,6 @@ export default {
     this.content = this.data.content.replace(/<[^>]*>|<\/[^>]*>/gm, "");
     var reg = /<img[^>]+src="[^"]+"[^>]*>/g;
     var result = this.data.content.match(reg); //获得所有的img标签
-    console.log(this.imgSrcs);
     if (result) {
       for (var i = 0; i < result.length; i++) {
         // var reg2 = /src="([^"]+)"/g;

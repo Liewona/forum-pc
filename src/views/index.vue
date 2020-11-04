@@ -94,7 +94,7 @@ export default {
       api: "api/discuss",
       title: "",
       total: 100,
-      pageSize: 25,
+      pageSize: 5,
       page: 1,
       id: 1
     };
@@ -119,10 +119,6 @@ export default {
         }
       );
       this.$(".w-e-text").focus();
-    },
-    handleClick() {
-      // this.api = "api/discuss/hot";
-      alert(this.tabType);
     },
     pressVal(html) {
       if (this.title == "") {
@@ -154,6 +150,7 @@ export default {
     },
     pageChange(index) {
       this.page = index;
+      this.getData();
     },
     getData() {
       var data = {
@@ -167,8 +164,10 @@ export default {
           params: data
         })
         .then(res => {
+          console.log(res)
           if (res.data.code == "0000") {
             this.data = res.data.data;
+            this.total = res.data.count;
           } else {
             this.$message.error(res.data.msg);
           }
