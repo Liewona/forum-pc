@@ -26,7 +26,11 @@
       </div>
 
       <div class="c-type">
-        <el-radio-group v-model="tabType" style="margin-bottom: 30px;">
+        <el-radio-group v-model="tabType"
+          style="margin: 20px 0 15px 0;"
+          @click="handleClick">
+          <el-radio-button @click="handleClick"
+            label="sug">推荐</el-radio-button>
           <el-radio-button label="hot">最热</el-radio-button>
           <el-radio-button label="last">最新</el-radio-button>
         </el-radio-group>
@@ -40,19 +44,24 @@
         </div>
       </div>
 
-      <div>
-        <form action="api/up/dis" method="post" enctype="multipart/form-data">
-        SpringMVC文件上传 <br>
-        选择文件：<input type="file" name="upfile" id="" /> <br>
-        <input type="submit" value="上传">
-    </form>
-      </div>
+      <el-pagination background
+        @current-change="pageChange"
+        layout="prev, pager, next"
+        :page-size="100"
+        :hide-on-single-page="true"
+        :total="100">
+      </el-pagination>
 
     </el-container>
-    <el-container>
+    <el-container class="editor"  direction="vertical">
 
-      <wang-editor class="editor"
-        :id="'editor'" @pressVal="pressVal"
+      <el-input placeholder="请输入标题" style="margin-bottom: 10px;"
+        v-model="title"
+        clearable>
+      </el-input>
+
+      <wang-editor
+        @pressVal="pressVal"
         ref="editor"></wang-editor>
     </el-container>
   </el-container>
@@ -67,29 +76,22 @@ export default {
   name: "index",
   components: {
     WangEditor,
-    MainBodyOne
+    MainBodyOne,
   },
-  beforeCreate() {
-    this.$axios
-      .get("api/discuss")
-      .then(res => {
-        if (res.data.code == "0000") {
-          this.data = res.data.data;
-        } else {
-          this.$message.error(res.data.msg);
-        }
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  props: {
+    id: Number,
+  },
+  created() {
+    this.getData();
   },
   data() {
     return {
       editorContent: String,
       data: Array,
       word: "",
-      tabType: "hot",
+      tabType: "sug",
+      api: "api/discuss",
+      title: "",
     };
   },
   methods: {
@@ -100,20 +102,59 @@ export default {
     },
     search() {},
     toWrite() {
-      console.log(this.$("#editor"))
-      this.$("html, body").animate({
-        scrollTop: this.$("#editor").offset().top
-      }, {
-        duration: 500,
-        easing: "swing"
-      });
+      console.log(this.$("#editor"));
+      console.log(this.$("#editor").offset());
+      this.$("html, body").animate(
+        {
+          scrollTop: this.$("#editor").offset().top
+        },
+        {
+          duration: 500,
+          easing: "swing"
+        }
+      );
       this.$(".w-e-text").focus();
     },
     handleClick() {
-
+      // this.api = "api/discuss/hot";
+      alert(this.tabType);
     },
     pressVal(html) {
-      console.log(html)
+      if(this.title == "") {
+        this.$message.error("请输入标题！");
+        return false;
+      }
+      console.log(html);
+      this.$axios.post("api/discuss", {
+        // id:uid,
+        id: 1,
+        title: this.title,
+        content: html,        
+      })
+      .then(res => {
+        if(res.data.code == "0000") {
+          this.$message.success("发表帖子成功");
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    pageChange() {},
+    getData() {
+      this.$axios
+        .get(this.api)
+        .then(res => {
+          if (res.data.code == "0000") {
+            this.data = res.data.data;
+          } else {
+            this.$message.error(res.data.msg);
+          }
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
@@ -169,7 +210,7 @@ div.handle-input {
   background-color: #309efc;
   color: #fff;
 }
-.type-item-click {  
+.type-item-click {
   background-color: #309efc;
   color: #fff;
 }

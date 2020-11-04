@@ -1,12 +1,12 @@
 <template>
   <div>
 
-    <div :id="id" class="main-editor">
+    <div id="editor" class="main-editor">
       <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
     </div>
     <br>
-    <span>{{now}}/1000</span>
     <el-button @click="submit" type="primary">发表</el-button>
+    <span :class="{fontRed:isRed}" style="display: inline-black; float: right; line-height:40px;">{{now}}/800</span>
   </div>
 </template>
 
@@ -19,10 +19,7 @@ export default {
     id: String
   },
   mounted() {
-    if (this.id == undefined) {
-      this.id = "123";
-    }
-    this.editor = new E(`#${this.id}`);
+    this.editor = new E(`#editor`);
     this.editor.config.uploadFileName = "upfile";
     // this.editor.customConfig.uploadFileName = "upfile";
     this.editor.config.uploadImgServer = "api/up/dis";
@@ -32,6 +29,7 @@ export default {
     return {
       editor: Object,
       now: 0,
+      isRed: false
     };
   },
   methods: {
@@ -41,15 +39,27 @@ export default {
     },
     submit() {
       var html = this.editor.txt.html();
+      if(this.now > 800) {
+        this.$message.error("发表内容过多，请修改");
+        return false;
+      }
       this.$emit("pressVal", html);
     }
   },
   watch: {
     editor: {
       deep: true,
-      handler: function(newVal, oldVal) {{
+      handler(newVal, oldVal) {
         this.now = newVal.txt.html().length;
-      }}
+        if(this.now >= 800) {
+          console.log(this.now)
+          console.log(newVal, oldVal)
+          this.editor = oldVal; 
+          this.isRed = true;
+        } else {
+          this.isRed = false;
+        }
+      }
     },
   }
   
@@ -57,5 +67,7 @@ export default {
 </script>
 
 <style>
-
+.fontRed {
+  color: red;
+}
 </style>
