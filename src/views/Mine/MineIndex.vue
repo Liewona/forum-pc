@@ -25,6 +25,18 @@
         <main-body-one class="itemBox" :data="item"></main-body-one>
       </div>
     </div>
+    
+    <div style="margin: 25px 0px">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage1"
+          :page-size="pageSize"
+          background="true"
+          layout="total, prev, pager, next"
+          :total="totleSize"
+        >
+        </el-pagination>
+      </div>
 </el-container>
 </template>
 
@@ -53,6 +65,9 @@ export default {
   data() {
     return {
       data:[],
+      pageSize: 6,
+      currentPage1: 1,
+      totleSize: 0,
       squareUrl:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604466294333&di=b4981770df21a26896005769cda194c0&imgtype=0&src=http%3A%2F%2Foss.5eplay.com%2Feditor%2F20200301%2F1c8c26566f712493c52307f5217efb22.jpeg"
     };
