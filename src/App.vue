@@ -2,6 +2,7 @@
   <div id="app">
     <div id="nav">      
       <forum-title></forum-title>
+      <router-link to="/mineIndex">mineIndex</router-link>
     </div>
     <router-view />
   </div>
