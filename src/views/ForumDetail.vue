@@ -1,6 +1,5 @@
 <template>
   <div>
-    hahahhahahah
   </div>
 </template>
 

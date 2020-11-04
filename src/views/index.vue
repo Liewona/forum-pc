@@ -6,7 +6,7 @@
 
       <div class="search">
 
-        <el-input placeholder="请输入搜索内容"
+        <el-input placeholder="请输入搜索内容" @keyup.enter.native="getData"
           clearable
           v-model="word"
           class="handle-input">
