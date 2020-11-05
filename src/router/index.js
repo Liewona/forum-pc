@@ -15,7 +15,7 @@ const routes = [
     component: Index
   },
   {
-    path: "/discuss/:id",
+    path: "/discuss",
     name: "ForumDetail",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
