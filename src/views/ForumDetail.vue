@@ -47,15 +47,12 @@ export default {
   },
   methods: {
     pressVal(html) {
-      if (this.title == "") {
-        this.$message.error("请输入标题！");
-        return false;
-      }
       console.log(html);
       this.$axios
-        .post("api/reamrk", {
+        .post("/api/remark", {
           // id:uid,
-          id: 1,
+          did: 1,
+          uid: 1,
           content: html
         })
         .then(res => {

@@ -24,10 +24,33 @@
       </div>
       <div ref="rebackBox"
         class="reback-box">
-        <reback-item></reback-item>
-        <reback-item></reback-item>
-        <reback-item></reback-item>
-        <reback-item></reback-item>
+        <div v-for="item in replys">
+          <reback-item :data="item"
+            @showWriter="changeEditorShowState"></reback-item>
+        </div>
+
+        <div v-if="replys.length > 0"
+          style="text-align:right; margin-top: 3px; margin-bottom: 5px; padding: 0 20px;">
+          <el-button type="normarl"
+            @click="sayToWrite"
+            size="mini">我也说一句</el-button>
+        </div>
+
+        <div v-show="replyEditorShow"
+          class="replyInputBox">
+          <el-input type="textarea"
+            placeholder="请输入内容"
+            clearable
+            v-model="replyContent"
+            maxlength="40"
+            show-word-limit></el-input>
+          <div style="text-align:right; margin-top:8px;">
+            <el-button style="font-size:12px;"
+              size="mini"
+              @click="sayReply"
+              type="primary">确认回复</el-button>
+          </div>
+        </div>
       </div>
     </el-main>
 
@@ -42,7 +65,10 @@ export default {
     RebackItem
   },
   created() {
+    // this.fromId = uid;
+    this.fromId = 1;
     this.did = this.$route.params.id;
+    this.getReplyData();
   },
   props: {
     data: Object
@@ -54,7 +80,12 @@ export default {
       rebackTag: "回复",
       isRebackTagBg: false,
       replys: [],
-      replyEditorShow: false
+      replyEditorShow: false,
+      toId: Number,
+      toName: "",
+      fromId: Number,
+      replyContent: "",
+      reg: ""
     };
   },
   methods: {
@@ -70,11 +101,13 @@ export default {
       if (!this.clickReback) {
         if (this.replys.length > 0) {
           this.$refs.rebackBox.style.paddingTop = "4px";
-          this.$refs.rebackBox.style.height = this.replys.length * 44 + "px";
+          this.$refs.rebackBox.style.height =
+            this.replys.length * 56 + 38 + "px";
         } else {
           this.replyEditorShow = !this.replyEditorShow;
           // this.$refs.rebackBox.style.paddingTop = "4px";
           this.$refs.rebackBox.style.height = "100px";
+          // this.$refs.rebackBox.style.height = (this.replys.length * 44 + 110) + "px";
         }
         setTimeout(() => {
           this.rebackTag = "收起回复";
@@ -93,15 +126,67 @@ export default {
     },
     getReplyData() {
       this.$axios
-        .get("api/reply/" + this.data.id)
+        .get("/api/reply/" + this.data.id)
         .then(res => {
           if (res.data.code == "0000") {
             this.replys = res.data.data;
+            if(this.replyEditorShow) {
+              this.reShowReplyBox();
+            }
           }
         })
         .catch(err => {
           console.log(err);
         });
+    },
+    changeEditorShowState(flag, to) {
+      // this.sayToWrite();
+      this.toId = to.to;
+      this.toName = to.toName;
+      this.reg = "@ " + to.toName + "：";
+      this.replyContent = "@ " + to.toName + "：";
+
+      if (!this.replyEditorShow) {
+        this.sayToWrite();
+      }
+    },
+    sayToWrite() {
+      if (!this.replyEditorShow) {
+        this.$refs.rebackBox.style.height =
+          this.replys.length * 56 + 138 + "px";
+        this.replyEditorShow = true;
+      } else {
+        this.$refs.rebackBox.style.height = this.replys.length * 56 + 38 + "px";
+
+        setTimeout(() => {
+          this.replyEditorShow = false;
+          this.replyContent = "";
+        }, 800);
+      }
+    },
+    sayReply() {
+      var content = this.replyContent.replace(this.reg, "");
+      console.log(content);
+      this.$axios
+        .post("/api/reply", {
+          fromId: this.fromId,
+          toId: this.toId,
+          content: content,
+          remarkId: this.data.id
+        })
+        .then(res => {
+          if (res.data.code == "0000") {
+            this.$message.success("回复成功");
+            this.replyContent = "";
+            this.getReplyData();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    reShowReplyBox() {
+      this.$refs.rebackBox.style.height = this.replys.length * 56 + 138 + "px";
     }
   }
 };
@@ -156,6 +241,9 @@ export default {
 }
 .el-main::-webkit-scrollbar {
   display: none; /* Chrome Safari */
+}
+.replyInputBox {
+  padding: 5px 20px 10px 5px;
 }
 
 /* table 样式 */

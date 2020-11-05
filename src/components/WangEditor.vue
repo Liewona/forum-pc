@@ -22,7 +22,7 @@ export default {
     this.editor.config.uploadFileName = "upfile";
     this.editor.config.focus = false;
     // this.editor.customConfig.uploadFileName = "upfile";
-    this.editor.config.uploadImgServer = "api/up/dis";
+    this.editor.config.uploadImgServer = "/api/up/dis";
     this.editor.create();
   },
   data() {

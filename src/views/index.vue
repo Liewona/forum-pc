@@ -91,7 +91,7 @@ export default {
       data: Array,
       word: "",
       tabType: "sug",
-      api: "api/discuss",
+      api: "/api/discuss",
       title: "",
       total: 100,
       pageSize: 5,
@@ -127,7 +127,7 @@ export default {
       }
       console.log(html);
       this.$axios
-        .post("api/discuss", {
+        .post("/api/discuss", {
           // id:uid,
           id: 1,
           title: this.title,
