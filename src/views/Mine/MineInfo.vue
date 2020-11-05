@@ -3,9 +3,16 @@
     <el-card>
       <div class="user-setting">
         <h3>基本信息</h3>
-        <el-form :model="formInline" class="demo-form" ref="formInline" :label-position="labelPosition" label-width="80px" >
+        <el-form
+          :model="formInline"
+          class="demo-form"
+          ref="formInline"
+          :label-position="labelPosition"
+          label-width="80px"
+        >
           <el-form-item label="头像">
             <el-upload
+              v-if="isMe"
               class="avatar-uploader"
               action="http://localhost:8080/api/upload/"
               :show-file-list="false"
@@ -17,33 +24,84 @@
               <img v-if="imageUrl" :src="imageUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
+            <img v-else :src="imageUrl" class="avatar" />
           </el-form-item>
-          <el-form-item label="呢称">
-            <el-input style="width:250px"
+          <el-form-item label="昵称">
+            <el-input
+              v-if="isMe"
+              style="width:250px"
               v-model="formInline.username"
               placeholder="昵称"
             ></el-input>
+            <el-input
+              v-else
+              style="width:250px"
+              v-model="formInline.username"
+              placeholder="昵称"
+              :disabled="true"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="真实姓名">
+            <el-input
+              v-if="isMe"
+              style="width:250px"
+              v-model="formInline.uname"
+              placeholder="真实姓名"
+            ></el-input>
+            <el-input
+              v-else
+              style="width:250px"
+              v-model="formInline.uname"
+              placeholder="真实姓名"
+              :disabled="true"
+            ></el-input>
           </el-form-item>
           <el-form-item label="联系电话">
-            <el-input style="width:250px"
+            <el-input
+              v-if="isMe"
+              style="width:250px"
               v-model="formInline.phonenum"
               placeholder="联系电话"
             ></el-input>
+            <el-input
+              v-else
+              style="width:250px"
+              v-model="formInline.phonenum"
+              placeholder="联系电话"
+              :disabled="true"
+            ></el-input>
           </el-form-item>
           <el-form-item label="年龄">
-            <el-input style="width:250px"
+            <el-input
+              v-if="isMe"
+              style="width:250px"
               v-model="formInline.age"
               placeholder="年龄"
             ></el-input>
+
+            <el-input
+              v-else
+              style="width:250px"
+              v-model="formInline.age"
+              placeholder="年龄"
+              :disabled="true"
+            ></el-input>
           </el-form-item>
+
           <el-form-item label="性别" prop="sex">
-            <el-radio-group v-model="formInline.sex">
+            <el-radio-group v-if="isMe" v-model="formInline.sex">
               <el-radio label="男"></el-radio>
               <el-radio label="女"></el-radio>
               <el-radio label="隐藏"></el-radio>
             </el-radio-group>
+            <el-radio-group v-else v-model="formInline.sex">
+              <el-radio disabled label="男"></el-radio>
+              <el-radio disabled label="女"></el-radio>
+              <el-radio disabled label="隐藏"></el-radio>
+            </el-radio-group>
           </el-form-item>
-          <el-form-item style="margin-top: 150px">
+
+          <el-form-item v-if="isMe" style="margin-top: 150px">
             <el-button @click="onSubmit()">提交修改</el-button>
             <el-button type="primary" @click="dialogFormVisible = true"
               >修改密码</el-button
@@ -96,7 +154,6 @@
 <script>
 export default {
   data() {
-    
     var validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入密码"));
@@ -117,11 +174,14 @@ export default {
       }
     };
     return {
-      labelPosition: 'left',
+      id: this.$route.query.id,
+      labelPosition: "left",
       formInline: {
         username: "",
         phonenum: "",
-        useremail: ""
+        useremail: "",
+        uname: "",
+        sex:'男',
       },
       imageUrl: "",
 
@@ -135,6 +195,14 @@ export default {
         checkPass: [{ validator: validatePass2, trigger: "blur" }]
       }
     };
+  },
+  computed: {
+    isMe() {
+      return this.$store.state.userInfo.id == this.id;
+    }
+  },
+  created() {
+    this.id = this.$route.query.id;
   },
   methods: {
     successRes(response, file, fileList) {
@@ -258,25 +326,25 @@ export default {
   text-align: left;
 }
 .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-     width: 100px;
-    height: 100px;
-    color: #8c939d;
-    text-align: center;
-  }
-  .avatar {
-    width: 100px;
-    height: 100px;
-    display: block;
-  }
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  width: 100px;
+  height: 100px;
+  color: #8c939d;
+  text-align: center;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
 </style>

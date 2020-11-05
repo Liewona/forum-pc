@@ -1,62 +1,64 @@
 <template>
-<el-container class="mineIndex" id="mineIndex" direction="vertical">
-  <el-header
-        ><div class="search">
-          <el-input
-            placeholder="请输入搜索内容"
-            clearable
-            v-model="word"
-            class="handle-input"
+  <el-container class="mineIndex" id="mineIndex" direction="vertical">
+    <el-header
+      ><div class="search">
+        <el-input
+          placeholder="请输入搜索内容"
+          clearable
+          v-model="word"
+          class="handle-input"
+        >
+          <el-button
+            type="primary"
+            class="searchBtn"
+            @click="search"
+            slot="append"
+            icon="el-icon-search"
+            >搜索帖子</el-button
           >
-            <el-button
-              type="primary"
-              class="searchBtn"
-              @click="search"
-              slot="append"
-              icon="el-icon-search"
-              >搜索帖子</el-button
-            >
-          </el-input>
-        </div></el-header
-      >
-  <el-card class="box-card" style="margin-bottom:15px">
-    <div  class="clearfix">
-      <span
-        ><el-avatar shape="square" :size="100" :src="squareUrl"></el-avatar
-      ></span>
-      <div class="userinfo_middle">
-        <div class="userinfo_title">
-          <span class="userinfo_username ">that_is_why</span>
+        </el-input>
+      </div></el-header
+    >
+    <el-card class="box-card" style="margin-bottom:15px">
+      <div class="clearfix">
+        <span
+          ><el-avatar shape="square" :size="100" :src="squareUrl"></el-avatar
+        ></span>
+        <div class="userinfo_middle">
+          <div class="userinfo_title">
+            <span class="userinfo_username ">{{ userName }}</span>
+          </div>
+          <div class="userinfo_userdata">
+            <span class="user_name"
+              >用户名:{{ userName
+              }}<!--<span--><span class="userinfo_split"></span>
+              <span>年龄:{{ age }}</span
+              ><span class="userinfo_split"></span><span>性别:{{ sex }}</span>
+            </span>
+          </div>
+          <el-tag v-if="isMe" @click.native="toInfo()">修改信息</el-tag>
+          <!-- <el-tag v-else @click.native="toInfo()">查看信息</el-tag> -->
         </div>
-        <div class="userinfo_userdata">
-          <span class="user_name"
-            >用户名:that_is_why<!--<span--><span class="userinfo_split"></span>
-            <span>吧龄:6.3年</span><span class="userinfo_split"></span
-            ><span>发贴:17</span>
-          </span>
-        </div>
-        <el-tag @click.native="toInfo()">修改信息</el-tag>
       </div>
-    </div>
-  </el-card>
+    </el-card>
     <div class="body">
       <div v-for="item in data" :key="item.id">
         <main-body-one class="itemBox" :data="item"></main-body-one>
       </div>
     </div>
-    
+
     <div style="margin: 25px 0px">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage1"
-          :page-size="pageSize"
-          background="true"
-          layout="total, prev, pager, next"
-          :total="totleSize"
-        >
-        </el-pagination>
-      </div>
-</el-container>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage1"
+        :page-size="pageSize"
+        background="true"
+        layout="total, prev, pager, next"
+        :total="totleSize"
+      >
+      </el-pagination>
+    </div>
+  </el-container>
 </template>
 
 <script>
@@ -64,6 +66,9 @@ import MainBodyOne from "@/components/index/MainBodyOne.vue";
 export default {
   components: {
     MainBodyOne
+  },
+  created() {
+    this.id = this.$route.query.id;
   },
   
   beforeCreate() {
@@ -83,22 +88,33 @@ export default {
   },
   data() {
     return {
-      data:[],
+      data: [],
       pageSize: 6,
       currentPage1: 1,
       totleSize: 0,
-      squareUrl:
-        "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604466294333&di=b4981770df21a26896005769cda194c0&imgtype=0&src=http%3A%2F%2Foss.5eplay.com%2Feditor%2F20200301%2F1c8c26566f712493c52307f5217efb22.jpeg"
+      id: this.$route.query.id,
+      userName: this.$store.state.userInfo.uname,
+      age: this.$store.state.userInfo.age,
+      sex: this.$store.state.userInfo.sex,
+      squareUrl: this.$store.state.userInfo.img
     };
   },
-  created(){
-    this.beforeCreate();
-  },
-  methods:{
-    toInfo(){
-      this.$router.push('/mineInfo');
+  computed: {
+    isMe() {
+      return this.$store.state.userInfo.id == this.id;
     }
   },
+  created() {
+    this.beforeCreate();
+  },
+  methods: {
+    toInfo() {
+      this.$router.push({
+        path: "/mineInfo",
+        query: { id: this.id }
+      });
+    }
+  }
 };
 </script>
 
@@ -119,7 +135,7 @@ export default {
 }
 .userinfo_middle {
   float: right;
-  padding-right: 555px;
+  padding-right: 600px;
 }
 .userinfo_title {
   /* float: right; */
