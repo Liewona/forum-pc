@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     hasLogin: false,
     userInfo:"",
+    userId:"",
   },
   mutations: {
     login(state,userInfoR){
