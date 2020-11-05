@@ -74,7 +74,13 @@ export default {
   
   beforeCreate() {
     this.$axios
-      .get("/api/discuss")
+      .get("/api/discussByUid", {
+            params: {
+              userId: this.id,
+              begin: this.currentPage1,
+              limit: this.pageSize,
+            },
+          })
       .then(res => {
         if (res.data.code == "0000") {
           this.data = res.data.data;
