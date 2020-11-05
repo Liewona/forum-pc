@@ -34,7 +34,12 @@ export default {
   methods:{
     toPersonal(){
       this.$router.push('/mineIndex');
-    }
+    },
+    exit() {
+      this.$store.state.hasLogin = false;
+      this.$store.state.userInfo = null;
+      this.$router.push("/");
+    },
   }
 };
 </script>

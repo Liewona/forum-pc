@@ -1,5 +1,24 @@
 <template>
 <el-container class="mineIndex" id="mineIndex" direction="vertical">
+  <el-header
+        ><div class="search">
+          <el-input
+            placeholder="请输入搜索内容"
+            clearable
+            v-model="word"
+            class="handle-input"
+          >
+            <el-button
+              type="primary"
+              class="searchBtn"
+              @click="search"
+              slot="append"
+              icon="el-icon-search"
+              >搜索帖子</el-button
+            >
+          </el-input>
+        </div></el-header
+      >
   <el-card class="box-card" style="margin-bottom:15px">
     <div  class="clearfix">
       <span

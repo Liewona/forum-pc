@@ -24,8 +24,33 @@ export default {
       console.log(from);
       this.data = to.params.id;
     }
+  },
+  methods: {
+  login()
+  {
+    this.$axios
+            .get("/user/UserInfo", {
+              userId: 1
+            })
+            .then((res) => {
+              if (res.data.code === 0) {
+                this.$message.success(res.data.msg);
+                // this.$router.replace({path: '/index'})
+                this.dialogFormVisible = false;
+                this.$store.state.hasLogin = true;
+                this.$store.state.userInfo = res.data.obj;
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            })
+            .catch((err) => {
+              this.$message.error("登录失败");
+              console.log("error submit!!");
+            });
   }
 }
+}
+
 </script>
 
 <style>

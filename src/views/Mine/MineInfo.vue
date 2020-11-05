@@ -249,7 +249,7 @@ export default {
   background: #fff;
   border-radius: 2px;
   padding: 10px 20px;
-  min-height: 1080px;
+  min-width: 900px;
 }
 .user-setting h3 {
   font-weight: 700;
@@ -269,15 +269,14 @@ export default {
   }
   .avatar-uploader-icon {
     font-size: 28px;
+     width: 100px;
+    height: 100px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
     text-align: center;
   }
   .avatar {
-    width: 178px;
-    height: 178px;
+    width: 100px;
+    height: 100px;
     display: block;
   }
 </style>
