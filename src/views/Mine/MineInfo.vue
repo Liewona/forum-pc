@@ -177,11 +177,11 @@ export default {
       id: this.$route.query.id,
       labelPosition: "left",
       formInline: {
-        username: "",
-        phonenum: "",
-        useremail: "",
-        uname: "",
-        sex:'男',
+        username: this.$store.state.userInfo.username,
+        phonenum: this.$store.state.userInfo.phone,
+        age: this.$store.state.userInfo.age,
+        uname: this.$store.state.userInfo.uname,
+        sex: this.$store.state.userInfo.sex
       },
       imageUrl: "",
 
@@ -282,11 +282,19 @@ export default {
         .then(() => {
           this.$axios
             .post("/updateUser", {
-              userimg: this.imageUrl,
-              userid: this.$store.state.userInfo.userid,
-              phonenum: this.formInline.phonenum,
+              // username: this.$store.state.userInfo.username,
+              // phonenum: this.$store.state.userInfo.phone,
+              // age: this.$store.state.userInfo.age,
+              // uname: this.$store.state.userInfo.uname,
+              // sex: this.$store.state.userInfo.sex,
+
+              img: this.imageUrl,
+              id: this.$store.state.userInfo.userid,
+              phone: this.formInline.phonenum,
               username: this.formInline.username,
-              useremail: this.formInline.useremail
+              uname:this.formInline.uname,
+              age: this.formInline.age,
+              sex:this.formInline.sex,
             })
             .then(res => {
               if (res.data.status === 200) {

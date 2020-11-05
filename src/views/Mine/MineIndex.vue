@@ -68,6 +68,7 @@ export default {
     MainBodyOne
   },
   created() {
+    this.beforeCreate();
     this.id = this.$route.query.id;
   },
   
@@ -103,9 +104,6 @@ export default {
     isMe() {
       return this.$store.state.userInfo.id == this.id;
     }
-  },
-  created() {
-    this.beforeCreate();
   },
   methods: {
     toInfo() {
