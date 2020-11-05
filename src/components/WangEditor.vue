@@ -2,7 +2,6 @@
   <div>
 
     <div id="editor" class="main-editor">
-      <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
     </div>
     <br>
     <el-button @click="submit" type="primary">发表</el-button>
@@ -21,6 +20,7 @@ export default {
   mounted() {
     this.editor = new E(`#editor`);
     this.editor.config.uploadFileName = "upfile";
+    this.editor.config.focus = false;
     // this.editor.customConfig.uploadFileName = "upfile";
     this.editor.config.uploadImgServer = "api/up/dis";
     this.editor.create();

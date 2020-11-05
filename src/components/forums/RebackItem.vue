@@ -4,16 +4,15 @@
       <el-avatar :size="40"
         shape="square"></el-avatar>
     </div>
-    <div>
+    <div style="word-break: break-all;">
       <span>zhangsan</span>
+      <span>回复</span>
+      <span>lisi</span>
       <span>
-        回复
-        <span>lisi</span>
+        : 萨芬发撒萨力克感冒颗粒能考虑萨力克感冒颗粒能考虑萨力克感冒颗力克感冒颗力克感冒颗
       </span>
-      <p style="word-break:break-word;">
-        :aaaaaaaaaaaaaaaaaaaagjuldfdgfdfgdgdfgasdasjkllllllllllllllkllllllllllllllllll
-      </p>
     </div>
+
   </el-container>
 </template>
 

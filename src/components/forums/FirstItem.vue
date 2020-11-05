@@ -19,15 +19,9 @@
       </div>
       <div class="item-footer">
         <span><i class="el-icon-time"></i>{{data.createTime}}</span>
-        <span :class="['reback', {'reback-click': isRebackTagBg}]"
+        <span class="reback"
+          id="rebackTag"
           @click="rebackClick">{{rebackTag}}</span>
-      </div>
-      <div ref="rebackBox"
-        class="reback-box">
-        <reback-item></reback-item>
-        <reback-item></reback-item>
-        <reback-item></reback-item>
-        <reback-item></reback-item>
       </div>
     </el-main>
 
@@ -51,10 +45,7 @@ export default {
     return {
       clickReback: false,
       did: Number,
-      rebackTag: "回复",
-      isRebackTagBg: false,
-      replys: [],
-      replyEditorShow: false
+      rebackTag: "回复"
     };
   },
   methods: {
@@ -67,41 +58,16 @@ export default {
       });
     },
     rebackClick() {
-      if (!this.clickReback) {
-        if (this.replys.length > 0) {
-          this.$refs.rebackBox.style.paddingTop = "4px";
-          this.$refs.rebackBox.style.height = this.replys.length * 44 + "px";
-        } else {
-          this.replyEditorShow = !this.replyEditorShow;
-          // this.$refs.rebackBox.style.paddingTop = "4px";
-          this.$refs.rebackBox.style.height = "100px";
+      this.$("html, body").animate(
+        {
+          scrollTop: this.$("#detailEditor").offset().top
+        },
+        {
+          duration: 500,
+          easing: "swing"
         }
-        setTimeout(() => {
-          this.rebackTag = "收起回复";
-          this.isRebackTagBg = !this.isRebackTagBg;
-        }, 800);
-      } else {
-        this.$refs.rebackBox.style.paddingTop = "0px";
-        this.$refs.rebackBox.style.height = "0px";
-        setTimeout(() => {
-          this.rebackTag = "回复";
-          this.isRebackTagBg = !this.isRebackTagBg;
-        }, 800);
-      }
-
-      this.clickReback = !this.clickReback;
-    },
-    getReplyData() {
-      this.$axios
-        .get("api/reply/" + this.data.id)
-        .then(res => {
-          if (res.data.code == "0000") {
-            this.replys = res.data.data;
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      );
+      this.$(".w-e-text").focus();
     }
   }
 };
@@ -148,7 +114,7 @@ export default {
   float: right;
   margin-top: 9px;
   overflow: hidden;
-  transition: 0.8s all linear;
+  transition: 1s all linear;
 }
 .he-zero {
   height: 0;
