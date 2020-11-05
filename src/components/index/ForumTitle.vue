@@ -11,7 +11,7 @@
       </div>
       <div style="float: right; display: inline-block;">
         <!-- <el-avatar :size="60"> user </el-avatar> -->
-        <el-button v-if="!hasLogin" type="text">登录/注册</el-button>
+        <el-button v-if="!hasLogin" type="text" @click="login">登录/注册</el-button>
         <el-tooltip v-else placement="bottom" style="padding: 0;">
           <div slot="content">
             <el-button type="text" @click="exit">退出</el-button>
@@ -57,6 +57,10 @@ export default {
     },
     toIndex() {
       this.$router.push({ path: "/" });
+    },
+    login(){
+      
+      window.location.href = "http://127.0.0.1:5501/public/loginUser.html"
     }
   }
 };

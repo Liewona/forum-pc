@@ -9,6 +9,19 @@
 
 
 <script>
+var url = location.search; //获取url中"?"符后的字串
+var theRequest = new Object();
+if (url.indexOf("?") != -1) {
+  var str = url.substr(1);
+  var strs = str.split("&");
+  for (var i = 0; i < strs.length; i++) {
+    theRequest[strs[i].split("=")[0]] = decodeURIComponent(
+      strs[i].split("=")[1]
+    );
+  }
+}
+var uid = theRequest.uid;
+
 import ForumTitle from "@/components/index/ForumTitle.vue";
 export default {
   components: {
@@ -16,6 +29,8 @@ export default {
   },
   created() {
     //在页面加载时读取sessionStorage里的状态信息
+
+    console.log(uid);
     if (sessionStorage.getItem("store")) {
       this.$store.replaceState(
         Object.assign(
@@ -46,7 +61,7 @@ export default {
       this.$axios
         .get("api/user/userInfo", {
           params: {
-            userId: 1
+            userId: uid
           }
         })
         .then(res => {
@@ -54,14 +69,15 @@ export default {
             //this.$message.success(res.data.msg);
             // this.$router.replace({path: '/index'})
             //this.dialogFormVisible = false;
-            this.$store.state.hasLogin = true;
+           // this.$store.commit("login",successResponse.data.obj);
+           this.$store.state.hasLogin = true;
             this.$store.state.userInfo = res.data.data;
           } else {
             this.$message.error(res.data.msg);
           }
         })
         .catch(err => {
-          this.$message.error("登录失败");
+         // this.$message.error("登录失败");
           console.log("error submit!!");
         });
     }

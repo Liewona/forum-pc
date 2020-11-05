@@ -80,6 +80,13 @@
         label-width="100px"
         class="demo-ruleForm"
       >
+      <el-form-item label="原密码" prop="beforepass">
+          <el-input
+            type="password"
+            v-model="ruleForm.beforepass"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
         <el-form-item label="密码" prop="pass">
           <el-input
             type="password"
@@ -140,8 +147,9 @@ export default {
       imageUrl: "",
 
       ruleForm: {
+        beforepass:'',
         pass: "",
-        checkPass: ""
+        checkPass: "",
       },
       dialogFormVisible: false,
       rules: {
@@ -194,8 +202,7 @@ export default {
             .then(res => {
               if (res.data.code == 0) {
                 this.$message.success(res.data.msg);
-                // this.$router.replace({path: '/index'})
-                this.$store.state.userInfo = res.data.obj;
+                dialogFormVisible : false;
               } else {
                 this.$message.error(res.data.msg);
               }
@@ -244,7 +251,7 @@ export default {
             .then(res => {
               if (res.data.code == 0) {
                 this.$message.success(res.data.msg);
-                this.$store.state.userInfo = res.data.obj;
+                //this.$store.state.userInfo = res.data.obj;
               } else {
                 this.$message.error(res.data.msg);
               }
