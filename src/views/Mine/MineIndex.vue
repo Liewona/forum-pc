@@ -74,7 +74,7 @@ export default {
   
   beforeCreate() {
     this.$axios
-      .get("api/discuss")
+      .get("/api/discuss")
       .then(res => {
         if (res.data.code == "0000") {
           this.data = res.data.data;

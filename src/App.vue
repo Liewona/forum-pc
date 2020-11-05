@@ -61,7 +61,7 @@ export default {
       this.$axios
         .get("api/user/userInfo", {
           params: {
-            userId: uid
+            userId: 1
           }
         })
         .then(res => {
