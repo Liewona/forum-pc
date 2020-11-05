@@ -34,12 +34,15 @@ export default {
     console.log(this.$route.params);
     this.did = this.$route.params.id;
     // this.uid = 
+    if(this.$store.state.userInfo) {
+      this.uid = this.$store.state.userInfo.uid;
+    }
     this.getDiscuss();
     this.getData();
   },
   data() {
     return {
-      uid: 1,
+      uid: 0,
       did: 1,
       discuss: {},
       remarks: []
@@ -47,12 +50,16 @@ export default {
   },
   methods: {
     pressVal(html) {
+      if(this.uid <= 0) {
+        this.$message.error("请先登陆后发帖");
+        return false;
+      }
       console.log(html);
       this.$axios
         .post("/api/remark", {
           // id:uid,
-          did: 1,
-          uid: 1,
+          did: this.did,
+          uid: this.uid,
           content: html
         })
         .then(res => {

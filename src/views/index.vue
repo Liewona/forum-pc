@@ -6,7 +6,8 @@
 
       <div class="search">
 
-        <el-input placeholder="请输入搜索内容" @keyup.enter.native="getData"
+        <el-input placeholder="请输入搜索内容"
+          @keyup.enter.native="getData"
           clearable
           v-model="word"
           class="handle-input">
@@ -121,32 +122,36 @@ export default {
       this.$(".w-e-text").focus();
     },
     pressVal(html) {
-      if (this.title == "") {
-        this.$message.error("请输入标题！");
-        return false;
+      if (this.$store.state.userInfo) {
+        if (this.title == "") {
+          this.$message.error("请输入标题！");
+          return false;
+        }
+        console.log(html);
+        this.$axios
+          .post("/api/discuss", {
+            // id:uid,
+            id: 1,
+            title: this.title,
+            content: html
+          })
+          .then(res => {
+            console.log(res);
+            if (res.data.code == "0000") {
+              this.$message.success("发表帖子成功");
+              this.$refs.editor.editor.txt.clear();
+              this.title = "";
+              this.getData();
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.$message.error("请先登陆后发帖");
       }
-      console.log(html);
-      this.$axios
-        .post("/api/discuss", {
-          // id:uid,
-          id: 1,
-          title: this.title,
-          content: html
-        })
-        .then(res => {
-          console.log(res);
-          if (res.data.code == "0000") {
-            this.$message.success("发表帖子成功");
-            this.$refs.editor.editor.txt.clear();
-            this.title = "";
-            this.getData();
-          } else {
-            this.$message.error(res.data.msg);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
     },
     pageChange(index) {
       this.page = index;
@@ -164,7 +169,7 @@ export default {
           params: data
         })
         .then(res => {
-          console.log(res)
+          console.log(res);
           if (res.data.code == "0000") {
             this.data = res.data.data;
             this.total = res.data.count;
@@ -218,8 +223,8 @@ div.handle-input {
   border-radius: 0;
   padding-right: 30px;
 }
-#main .searchBtn:hover {  
-  background-color:  rgb(34, 134, 235);
+#main .searchBtn:hover {
+  background-color: rgb(34, 134, 235);
   border-color: rgb(34, 134, 235);
   transition: 0.5s;
 }
@@ -230,9 +235,8 @@ div.handle-input {
   border-radius: 0 4px 4px 0;
 }
 #main .writeBtn:hover {
-  
   background-color: #4faf20;
-  border-color: #4faf20;;
+  border-color: #4faf20;
   transition: 0.5s;
 }
 .type-item {
@@ -245,6 +249,4 @@ div.handle-input {
   background-color: #309efc;
   color: #fff;
 }
-
-
 </style>

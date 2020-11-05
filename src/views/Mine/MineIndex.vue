@@ -1,61 +1,61 @@
 <template>
-  <el-container class="mineIndex" id="mineIndex" direction="vertical">
-    <el-header
-      ><div class="search">
-        <el-input
-          placeholder="请输入搜索内容"
+  <el-container class="mineIndex"
+    id="mineIndex"
+    direction="vertical">
+    <el-header>
+      <div class="search">
+        <el-input placeholder="请输入搜索内容"
           clearable
           v-model="word"
-          class="handle-input"
-        >
-          <el-button
-            type="primary"
+          class="handle-input">
+          <el-button type="primary"
             class="searchBtn"
             @click="search"
             slot="append"
-            icon="el-icon-search"
-            >搜索帖子</el-button
-          >
+            icon="el-icon-search">搜索帖子</el-button>
         </el-input>
-      </div></el-header
-    >
-    <el-card class="box-card" style="margin-bottom:15px">
+      </div>
+    </el-header>
+    <el-card class="box-card"
+      style="margin-bottom:15px">
       <div class="clearfix">
-        <span
-          ><el-avatar shape="square" :size="100" :src="squareUrl"></el-avatar
-        ></span>
+        <span>
+          <el-avatar shape="square"
+            :size="100"
+            :src="this.infoData.img"></el-avatar>
+        </span>
         <div class="userinfo_middle">
           <div class="userinfo_title">
-            <span class="userinfo_username ">{{ userName }}</span>
+            <span class="userinfo_username ">{{ this.infoData.uname }}</span>
           </div>
           <div class="userinfo_userdata">
-            <span class="user_name"
-              >用户名:{{ userName
-              }}<!--<span--><span class="userinfo_split"></span>
-              <span>年龄:{{ age }}</span
-              ><span class="userinfo_split"></span><span>性别:{{ sex }}</span>
+            <span class="user_name">用户名:{{ this.infoData.uname
+              }}
+              <!--<span--><span class="userinfo_split"></span>
+              <span>年龄:{{ this.infoData.age }}</span><span class="userinfo_split"></span><span>性别:{{ this.infoData.sex }}</span>
             </span>
           </div>
-          <el-tag v-if="isMe" @click.native="toInfo()">修改信息</el-tag>
-          <!-- <el-tag v-else @click.native="toInfo()">查看信息</el-tag> -->
+          <el-tag v-if="id == logId"
+            @click.native="toInfo()">修改信息</el-tag>
+          <el-tag v-else>关注</el-tag>
         </div>
       </div>
     </el-card>
     <div class="body">
-      <div v-for="item in data" :key="item.id">
-        <main-body-one class="itemBox" :data="item"></main-body-one>
+      <div v-for="item in data"
+        :key="item.id">
+        <main-body-one class="itemBox"
+          :data="item"></main-body-one>
       </div>
     </div>
 
     <div style="margin: 25px 0px">
-      <el-pagination
-        @current-change="handleCurrentChange"
+      <el-pagination @current-change="handleCurrentChange"
         :current-page.sync="currentPage1"
         :page-size="pageSize"
         background="true"
         layout="total, prev, pager, next"
-        :total="totleSize"
-      >
+        :total="totleSize">
       </el-pagination>
     </div>
   </el-container>
@@ -67,23 +67,52 @@ export default {
   components: {
     MainBodyOne
   },
-  created() {
-    this.beforeCreate();
-    this.id = this.$route.query.id;
-  },
-  
   beforeCreate() {
     this.$axios
-      .get("/api/discussByUid", {
-            params: {
-              userId: this.id,
-              begin: this.currentPage1,
-              limit: this.pageSize,
-            },
-          })
+      .get("/api/user/userInfo", {
+        params: {
+          userId: this.$route.query.id
+        }
+      })
+      .then(res => {
+        if (res.data.code == 0) {
+          //this.$message.success(res.data.msg);
+          // this.$router.replace({path: '/index'})
+          //this.dialogFormVisible = false;
+          // this.$store.commit("login",successResponse.data.obj);
+
+          this.infoData = res.data.data;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      })
+      .catch(err => {
+        // this.$message.error("登录失败");
+        console.log("error submit!!");
+      });
+  },
+  created() {
+    if(this.$store.state.userInfo) {
+      this.logId = this.$store.state.userInfo.uid;
+    }
+    this.id = this.$route.query.id;
+    console.log({
+      userId: this.id,
+      begin: this.currentPage1,
+      limit: this.pageSize
+    });
+    this.$axios
+      .get("/api/discuss/discussByUid", {
+        params: {
+          userId: this.id,
+          begin: this.currentPage1,
+          limit: this.pageSize
+        }
+      })
       .then(res => {
         if (res.data.code == "0000") {
-          this.data = res.data.data;
+          this.data = res.data.data.discussDtoList;
+          this.totleSize = res.data.count;
         } else {
           this.$message.error(res.data.msg);
         }
@@ -95,27 +124,75 @@ export default {
   },
   data() {
     return {
+      logId: Number,
+      infoData: [],
       data: [],
       pageSize: 6,
       currentPage1: 1,
       totleSize: 0,
       id: this.$route.query.id,
-      userName: this.$store.state.userInfo.uname,
-      age: this.$store.state.userInfo.age,
-      sex: this.$store.state.userInfo.sex,
-      squareUrl: this.$store.state.userInfo.img
+      userName: "",
+      age: "",
+      sex: "",
+      squareUrl: ""
     };
   },
   computed: {
-    isMe() {
-      return this.$store.state.userInfo.id == this.id;
-    }
+    // isMe() {
+      // return this.$store.state.userInfo.uid == this.id;
+    // }
   },
   methods: {
     toInfo() {
       this.$router.push({
         path: "/mineInfo",
         query: { id: this.id }
+      });
+    },
+    getDiscuss() {
+      this.$axios
+      .get("/api/discuss/discussByUid", {
+        params: {
+          userId: this.id,
+          begin: this.currentPage1,
+          limit: this.pageSize
+        }
+      })
+      .then(res => {
+        if (res.data.code == "0000") {
+          this.data = res.data.data.discussDtoList;
+          this.totleSize = res.data.count;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    }
+  },
+  watch: {
+    $route(to, from) {
+      console.log(to.path);
+      this.$axios
+      .get("/api/user/userInfo", {
+        params: {
+          userId: this.$route.query.id
+        }
+      })
+      .then(res => {
+        if (res.data.code == 0) {
+          this.infoData = res.data.data;
+          this.id = this.infoData.id;
+          this.getDiscuss();
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      })
+      .catch(err => {
+        // this.$message.error("登录失败");
+        console.log("error submit!!");
       });
     }
   }

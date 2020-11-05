@@ -2,7 +2,7 @@
   <el-container>
     <div>
       <el-avatar :size="40"
-        src=""
+        :src="data.fromImg"
         shape="square"></el-avatar>
     </div>
     <div style="width:100%; margin: 0 8px;">
@@ -46,7 +46,12 @@ export default {
       });
     },
     toWrite() {
-      this.$emit("showWriter", true, {to: this.data.fromId, toName: this.data.fromName})
+      if(this.$store.state.userInfo) {
+        this.$emit("showWriter", true, {to: this.data.fromId, toName: this.data.fromName})
+      } else {
+        this.$message.error("请先登陆后回复");
+      }
+      
     }
   }
 };

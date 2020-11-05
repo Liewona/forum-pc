@@ -23,8 +23,9 @@ export default {
   methods: {
     clickUser() {
       this.$router.push({
-        name: "UserSpace",
-        params: {
+        
+        path: "/mineIndex",
+        query: {
           id: this.data.uid
         }
       })

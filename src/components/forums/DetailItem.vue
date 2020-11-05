@@ -2,7 +2,7 @@
   <el-container class="detail-main">
     <el-aside style="width:200px; background-color: #ddd">
       <div style="margin: 20px auto 10px auto; width: 100px;">
-        <el-avatar :size="100"
+        <el-avatar :size="100" :src="data.img"
           shape="square"></el-avatar>
       </div>
 
@@ -66,7 +66,10 @@ export default {
   },
   created() {
     // this.fromId = uid;
-    this.fromId = 1;
+    // this.fromId = 1;
+    if(this.$store.state.userInfo) {
+      this.fromId = this.$store.state.userInfo.uid;
+    }
     this.did = this.$route.params.id;
     this.getReplyData();
   },
@@ -83,7 +86,7 @@ export default {
       replyEditorShow: false,
       toId: Number,
       toName: "",
-      fromId: Number,
+      fromId: 0,
       replyContent: "",
       reg: ""
     };
@@ -165,6 +168,10 @@ export default {
       }
     },
     sayReply() {
+      if(this.fromId <= 0) {
+        this.$message.error("请先登陆后进行回复");
+        return false;
+      }
       var content = this.replyContent.replace(this.reg, "");
       console.log(content);
       this.$axios

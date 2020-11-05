@@ -24,10 +24,10 @@ layui.use(['form', 'jquery', 'layer'], function () {
             success: function (res) {
                 if(res.code == 200){
                     layer.msg(res.msg)
-                    console.log(res.data.uid)
-                    sessionStorage.setItem("uid", res.data.uid);
+                    // console.log(res.data.uid)
+                    // sessionStorage.setItem("uid", res.data.uid);
                     // console.log(sessionStorage.getItem("uid"))
-                    window.location.href = "http://localhost:8080/?uid="+res.data.uid;
+                    window.location.href = "/";
                 }else{
                     layer.msg(res.msg,{icon:2},function () {
                         changeCode();

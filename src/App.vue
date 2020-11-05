@@ -27,6 +27,21 @@ export default {
   components: {
     ForumTitle
   },
+  beforeCreate() {
+    this.$axios
+      .post("api/logmsg")
+      .then(res => {
+        if (res.data.code == "0000") {
+          console.log(res.data.data)
+          //sessionStorage.setItem("userInfo", res.data);
+          this.$store.state.userInfo = res.data.data;
+          this.$store.state.hasLogin = true;
+          console.log(this.$store.state.userInfo.uid);
+          
+        }
+      })
+      .catch(err => {});
+  },
   created() {
     //在页面加载时读取sessionStorage里的状态信息
 
@@ -45,7 +60,7 @@ export default {
     window.addEventListener("beforeunload", () => {
       sessionStorage.setItem("store", JSON.stringify(this.$store.state));
     });
-    this.login();
+    // this.login();
   },
   watch: {
     // 旧版本使用 '$route'(tom from)进行监听
@@ -57,30 +72,30 @@ export default {
     }
   },
   methods: {
-    login() {
-      this.$axios
-        .get("api/user/userInfo", {
-          params: {
-            userId: 1
-          }
-        })
-        .then(res => {
-          if (res.data.code == 0) {
-            //this.$message.success(res.data.msg);
-            // this.$router.replace({path: '/index'})
-            //this.dialogFormVisible = false;
-           // this.$store.commit("login",successResponse.data.obj);
-           this.$store.state.hasLogin = true;
-            this.$store.state.userInfo = res.data.data;
-          } else {
-            this.$message.error(res.data.msg);
-          }
-        })
-        .catch(err => {
-         // this.$message.error("登录失败");
-          console.log("error submit!!");
-        });
-    }
+    // login() {
+    //   this.$axios
+    //     .get("/api/user/userInfo", {
+    //       params: {
+    //         userId: uid
+    //       }
+    //     })
+    //     .then(res => {
+    //       if (res.data.code == 0) {
+    //         //this.$message.success(res.data.msg);
+    //         // this.$router.replace({path: '/index'})
+    //         //this.dialogFormVisible = false;
+    //        // this.$store.commit("login",successResponse.data.obj);
+    //        this.$store.state.hasLogin = true;
+    //         this.$store.state.userInfo = res.data.data;
+    //       } else {
+    //         this.$message.error(res.data.msg);
+    //       }
+    //     })
+    //     .catch(err => {
+    //      // this.$message.error("登录失败");
+    //       console.log("error submit!!");
+    //     });
+    // }
   }
 };
 </script>
