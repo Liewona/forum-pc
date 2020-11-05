@@ -29,11 +29,11 @@ export default {
   },
   created() {
     //在页面加载时读取sessionStorage里的状态信息
-
-    console.log(uid);
+   // console.log(uid);
     if (sessionStorage.getItem("store")) {
       this.$store.replaceState(
         Object.assign(
+          this.login(),
           {},
           this.$store.state,
           JSON.parse(sessionStorage.getItem("store"))
@@ -45,7 +45,7 @@ export default {
     window.addEventListener("beforeunload", () => {
       sessionStorage.setItem("store", JSON.stringify(this.$store.state));
     });
-    this.login();
+    
   },
   watch: {
     // 旧版本使用 '$route'(tom from)进行监听
@@ -58,10 +58,11 @@ export default {
   },
   methods: {
     login() {
+      this.$store.userId = uid
       this.$axios
         .get("api/user/userInfo", {
           params: {
-            userId: uid
+            userId:  this.$store.userId
           }
         })
         .then(res => {

@@ -72,27 +72,6 @@ export default {
     this.id = this.$route.query.id;
   },
   
-  beforeCreate() {
-    this.$axios
-      .get("api/discussByUid", {
-            params: {
-              userId: this.id,
-              begin: this.currentPage1,
-              limit: this.pageSize,
-            },
-          })
-      .then(res => {
-        if (res.data.code == "0000") {
-          this.data = res.data.data;
-        } else {
-          this.$message.error(res.data.msg);
-        }
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  },
   data() {
     return {
       data: [],
@@ -112,6 +91,28 @@ export default {
     }
   },
   methods: {
+    beforeCreate() {
+    this.$axios
+      .get("/api/discuss/discussByUid", {
+            params: {
+              userId: this.id,
+              begin: this.currentPage1,
+              limit: this.pageSize,
+            },
+          })
+      .then(res => {
+        if (res.data.code == "0000") {
+          this.data = res.data.data.discussDtoList;
+          this.totleSize =res.data.count
+        } else {
+          this.$message.error(res.data.msg);
+        }
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
     toInfo() {
       this.$router.push({
         path: "/mineInfo",
