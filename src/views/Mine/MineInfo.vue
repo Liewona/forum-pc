@@ -12,11 +12,10 @@
         >
           <el-form-item label="头像">
             <el-upload
-              v-if="isMe"
               class="avatar-uploader"
-              action="http://localhost:8080/api/upload/"
+              action="http://localhost:8080/api/user/upload/"
               :show-file-list="false"
-              :on-progress="progressUpload"
+              
               :on-success="successRes"
               :before-upload="beforeAvatarUpload"
               accept="image/jpeg,image/gif,image/png,image/bmp"
@@ -24,84 +23,39 @@
               <img v-if="imageUrl" :src="imageUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <img v-else :src="imageUrl" class="avatar" />
           </el-form-item>
           <el-form-item label="昵称">
             <el-input
-              v-if="isMe"
-              style="width:250px"
-              v-model="formInline.username"
-              placeholder="昵称"
-            ></el-input>
-            <el-input
-              v-else
-              style="width:250px"
-              v-model="formInline.username"
-              placeholder="昵称"
-              :disabled="true"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="真实姓名">
-            <el-input
-              v-if="isMe"
               style="width:250px"
               v-model="formInline.uname"
-              placeholder="真实姓名"
-            ></el-input>
-            <el-input
-              v-else
-              style="width:250px"
-              v-model="formInline.uname"
-              placeholder="真实姓名"
-              :disabled="true"
+              placeholder="昵称"
             ></el-input>
           </el-form-item>
+
           <el-form-item label="联系电话">
             <el-input
-              v-if="isMe"
               style="width:250px"
               v-model="formInline.phonenum"
               placeholder="联系电话"
-            ></el-input>
-            <el-input
-              v-else
-              style="width:250px"
-              v-model="formInline.phonenum"
-              placeholder="联系电话"
-              :disabled="true"
             ></el-input>
           </el-form-item>
           <el-form-item label="年龄">
             <el-input
-              v-if="isMe"
               style="width:250px"
               v-model="formInline.age"
               placeholder="年龄"
-            ></el-input>
-
-            <el-input
-              v-else
-              style="width:250px"
-              v-model="formInline.age"
-              placeholder="年龄"
-              :disabled="true"
             ></el-input>
           </el-form-item>
 
           <el-form-item label="性别" prop="sex">
-            <el-radio-group v-if="isMe" v-model="formInline.sex">
+            <el-radio-group v-model="formInline.sex">
               <el-radio label="男"></el-radio>
               <el-radio label="女"></el-radio>
               <el-radio label="隐藏"></el-radio>
             </el-radio-group>
-            <el-radio-group v-else v-model="formInline.sex">
-              <el-radio disabled label="男"></el-radio>
-              <el-radio disabled label="女"></el-radio>
-              <el-radio disabled label="隐藏"></el-radio>
-            </el-radio-group>
           </el-form-item>
 
-          <el-form-item v-if="isMe" style="margin-top: 150px">
+          <el-form-item style="margin-top: 150px">
             <el-button @click="onSubmit()">提交修改</el-button>
             <el-button type="primary" @click="dialogFormVisible = true"
               >修改密码</el-button
@@ -174,10 +128,10 @@ export default {
       }
     };
     return {
-      id: this.$route.query.id,
+      uid:"",
+      id: "",
       labelPosition: "left",
       formInline: {
-        username: this.$store.state.userInfo.username,
         phonenum: this.$store.state.userInfo.phone,
         age: this.$store.state.userInfo.age,
         uname: this.$store.state.userInfo.uname,
@@ -203,6 +157,7 @@ export default {
   },
   created() {
     this.id = this.$route.query.id;
+    this.uid = this.$route.query.id;
   },
   methods: {
     successRes(response, file, fileList) {
@@ -228,19 +183,16 @@ export default {
       }
     },
     submitForm(formName) {
+      //console.log(this.uid);
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$axios
-            .post("/updateUser", {
-              userimg: this.imageUrl,
-              userid: this.$store.state.userInfo.userid,
-              phonenum: this.formInline.phonenum,
-              username: this.formInline.username,
-              useremail: this.formInline.useremail,
-              loginpwd: this.ruleForm.pass
+            .post("api/user/updateAccount", {
+              uid: this.uid,
+              password: this.ruleForm.pass
             })
             .then(res => {
-              if (res.data.status === 200) {
+              if (res.data.code == 0) {
                 this.$message.success(res.data.msg);
                 // this.$router.replace({path: '/index'})
                 this.$store.state.userInfo = res.data.obj;
@@ -281,25 +233,17 @@ export default {
       })
         .then(() => {
           this.$axios
-            .post("/updateUser", {
-              // username: this.$store.state.userInfo.username,
-              // phonenum: this.$store.state.userInfo.phone,
-              // age: this.$store.state.userInfo.age,
-              // uname: this.$store.state.userInfo.uname,
-              // sex: this.$store.state.userInfo.sex,
-
+            .post("api/user/updateInfo", {
               img: this.imageUrl,
-              id: this.$store.state.userInfo.userid,
+              id: this.$store.state.userInfo.id,
               phone: this.formInline.phonenum,
-              username: this.formInline.username,
-              uname:this.formInline.uname,
+              uname: this.formInline.uname,
               age: this.formInline.age,
-              sex:this.formInline.sex,
+              sex: this.formInline.sex
             })
             .then(res => {
-              if (res.data.status === 200) {
+              if (res.data.code == 0) {
                 this.$message.success(res.data.msg);
-                // this.$router.replace({path: '/index'})
                 this.$store.state.userInfo = res.data.obj;
               } else {
                 this.$message.error(res.data.msg);
