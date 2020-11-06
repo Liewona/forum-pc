@@ -21,7 +21,7 @@
           <el-button type="text"
             @click="toPersonal">
             <el-avatar :size="60"
-              :src="this.$store.state.userInfo.img"></el-avatar>
+              :src="img"></el-avatar>
           </el-button>
         </el-tooltip>
       </div>
@@ -33,11 +33,34 @@
 export default {
   data() {
     return {
-      id: ""
+      id: "",
+      img: "",
     };
   },
   created() {
+    if(this.$store.state.userInfo) {
+
+    } else  {
+      this.$axios
+      .post("api/logmsg")
+      .then(res => {
+          console.log(res.data.data)
+          console.log(res.data)
+        if (res.data.code == "0000") {
+          //sessionStorage.setItem("userInfo", res.data);
+          this.img = res.data.data.img;          
+        }
+      })
+      .catch(err => {});
+      return ;
+    }
+    this.img = this.$store.state.userInfo.img;
+    if(this.img) {
+      console.log(this.img)
+      return true;
+    }
     
+    // alert(this.img)
   },
   computed: {
     hasLogin() {

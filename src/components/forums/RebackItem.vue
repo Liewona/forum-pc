@@ -36,6 +36,9 @@ export default {
     return {
     };
   },
+  created() {
+    console.log(this.data)
+  },
   methods: {
     clickUser(id) {
       this.$router.push({

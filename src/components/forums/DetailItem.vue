@@ -71,6 +71,7 @@ export default {
       this.fromId = this.$store.state.userInfo.uid;
     }
     this.did = this.$route.params.id;
+    console.log(this.data)
     this.getReplyData();
   },
   props: {
@@ -131,6 +132,7 @@ export default {
       this.$axios
         .get("/api/reply/" + this.data.id)
         .then(res => {
+          console.log(res)
           if (res.data.code == "0000") {
             this.replys = res.data.data;
             if(this.replyEditorShow) {

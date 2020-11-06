@@ -166,12 +166,13 @@ export default {
   created() {
     this.id = this.$route.query.id;
     this.uid = this.$route.query.id;
+    this.imageUrl = this.$store.state.userInfo.img;
   },
   methods: {
     successRes(response, file, fileList) {
       //文件上传成功之后
       //loading.close();r
-      this.imageUrl = "http://localhost:8080/img/" + response.fileName;
+      this.imageUrl = response.fileName;
       this.$message({
         message: response,
         type: "success"
